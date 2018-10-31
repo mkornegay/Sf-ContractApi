@@ -16,6 +16,8 @@ namespace Sf.ContractApi.Infrastructure
         }
 
         public DbSet<Contract> Contracts { get; set; }
+        public DbSet<ContractItem> ContractItems { get; set; }
+        public DbSet<Item> Items { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -60,6 +62,16 @@ namespace Sf.ContractApi.Infrastructure
         private void ConfigureContractItems(EntityTypeBuilder<ContractItem> builder)
         {
             builder.ToTable("ContractItem");
+
+            builder.HasKey(ci => new { ci.ItemId, ci.ContractId });
+
+            builder.HasOne(c => c.Contract)
+                .WithMany(ci => ci.ContractItems)
+                .HasForeignKey(ci => ci.ContractId);
+
+            builder.HasOne(i => i.Item)
+                .WithMany(ci => ci.ContractItems)
+                .HasForeignKey(ci => ci.ItemId);
 
         }
 

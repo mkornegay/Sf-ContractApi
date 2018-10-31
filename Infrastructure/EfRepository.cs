@@ -11,7 +11,7 @@ namespace Sf.ContractApi.Infrastructure
 {
     public class EfRepository<T> : IAsyncRepository<T> where T : BaseEntity
     {
-        private readonly ContractContext _contractContext;
+        protected readonly ContractContext _contractContext;
 
         public EfRepository(ContractContext contractContext)
         {

@@ -9,19 +9,24 @@ namespace Sf.ContractApi.ApplicationCore.Services
 {
     public class ContractService : IContractService
     {
-        private readonly IAsyncRepository<Contract> _contractRepository;
+        private readonly IContractRepository _contractRepository;
+        //private readonly IAsyncRepository<ContractItem> _contractItemRepository;
+        //private readonly IAsyncRepository<Item> _itemRepository;
 
-        public ContractService(IAsyncRepository<Contract> contractAsyncRepository)
+        public ContractService(IContractRepository contractRepository)
         {
-            _contractRepository = contractAsyncRepository;
+            _contractRepository = contractRepository;
+
         }
 
         public async Task<List<Contract>> ListAllContractsWithItemsAsync()
         {
-            var contracts = await _contractRepository.ListAllAsync();
+            var contracts = await _contractRepository.ListAllWithItemsAsync();
 
             return contracts;
             
         }
+
+   
     }
 }

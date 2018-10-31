@@ -33,7 +33,13 @@ namespace Sf.ContractApi.WebApi
 
             //services.AddCors();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddJsonOptions(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                });
+
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
@@ -45,6 +51,7 @@ namespace Sf.ContractApi.WebApi
                 options.UseSqlServer(Configuration.GetConnectionString("ContractConnection")));
 
             services.AddScoped(typeof(IAsyncRepository<>), typeof(EfRepository<>));
+            services.AddScoped<IContractRepository, ContractRepository>();
             services.AddScoped<IContractService, ContractService>();
 
         }
