@@ -14,11 +14,31 @@ namespace Sf.ContractApi.WebApi
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            var webHost = CreateWebHostBuilder(args);
+
+            // optionally add additional configuration by using 
+            //  the ConfigureAppConfiguration method and passing a delegate
+            webHost.ConfigureAppConfiguration((context, config) =>
+            {
+                // nothing for now
+            });
+
+            // optionally add logging configuration
+            webHost.ConfigureLogging((context, logger) =>
+            {
+                // DefaultBuilder includes Console, Debugger
+                logger.AddAzureWebAppDiagnostics();
+                
+            });
+
+            webHost                
+                .Build()
+                .Run();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseApplicationInsights()
                 .UseStartup<Startup>();
     }
 }

@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Sf.ContractApi.ApplicationCore.Configuration;
 using Sf.ContractApi.ApplicationCore.Interfaces;
 using Sf.ContractApi.ApplicationCore.Services;
 using Sf.ContractApi.Infrastructure;
@@ -33,6 +34,12 @@ namespace Sf.ContractApi.WebApi
 
             //services.AddCors();
 
+            // not needed because WebHost.CreateDefaultBuilder turns on options
+            //services.AddOptions();
+
+            // match the concrete configuration class to the section in applicationsettings.json
+            services.Configure<ApplicationConfiguration>(Configuration.GetSection(nameof(ApplicationConfiguration)));
+
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddJsonOptions(options =>
@@ -44,7 +51,7 @@ namespace Sf.ContractApi.WebApi
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "Solutions Foundry Sample Contracts Api", Version = "v1" });
+                c.SwaggerDoc("v3", new Info { Title = "Solutions Foundry Sample Contracts Api", Version = "v3" });
             });
 
             services.AddDbContext<ContractContext>(options =>
@@ -53,6 +60,7 @@ namespace Sf.ContractApi.WebApi
             services.AddScoped(typeof(IAsyncRepository<>), typeof(EfRepository<>));
             services.AddScoped<IContractRepository, ContractRepository>();
             services.AddScoped<IContractService, ContractService>();
+
 
         }
 
@@ -78,6 +86,7 @@ namespace Sf.ContractApi.WebApi
 
             //});
 
+            
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
@@ -85,11 +94,12 @@ namespace Sf.ContractApi.WebApi
             // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Solutions Foundry Sample Contracts Api V1");
+                c.SwaggerEndpoint("/swagger/v3/swagger.json", "Solutions Foundry Sample Contracts Api V3");
             });
 
             app.UseHttpsRedirection();
             app.UseMvc();
+
 
  
         }
